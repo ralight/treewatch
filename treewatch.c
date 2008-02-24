@@ -1,7 +1,7 @@
 /*
- * File: treewatch.c Author: Roger Light Date: 2008/02/24 Desc: Watch a list of
- * directories and execute a program on a file change.  $Id: control.c 9702
- * 2008-02-11 19:18:17Z josef $
+ * File: treewatch.c Author: Roger Light
+ * Date: 2008/02/24
+ * Desc: Watch a list of directories and execute a program on a file change.
  *
  * Portions of this file are taken from the GGZ Gaming Zone and are Copyright
  * Josef Spillner.
@@ -157,7 +157,7 @@ static void reconfiguration_handle(void)
 				}
 			}
 
-			/*
+			/* inotify event debugging
 			switch(ev.mask){
 				case IN_CLOSE_WRITE:
 					printf("%s (IN_CLOSE_WRITE)\n", filename);
@@ -219,7 +219,8 @@ int main(int argc, char *argv[])
 				printf("Copyright (C) 2008 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n");
 				printf("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n");
 				printf("treewatch is a program to watch a directory and execute a program on file changes.\n\n");
-				printf("Usage: treewatch \n\n");
+				printf("Usage: treewatch -h\n");
+				printf("       treewatch [-c command] [-d dir] [-f file] [-o \"some options\"] [-w]\n\n");
 
 				printf(" -c, --command        Specify full path to command to run (default: /usr/bin/make)\n");
 				printf(" -d, --directory      Directory to watch. May be specified multiple times.\n");

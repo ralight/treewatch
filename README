@@ -1,5 +1,5 @@
-treewatch 1.0 (20080224)
-========================
+treewatch 1.0.1 (20080224)
+==========================
 
 treewatch is a simple program to watch a set of directories and execute a
 program when there is a change in the files within the directories.
