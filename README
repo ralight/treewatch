@@ -1,0 +1,14 @@
+treewatch
+=========
+
+treewatch is a simple program to watch a directory and execute a program when
+there is a change in the files within the directory.
+
+As currently configured it watches for changes in .c, .h and .cpp files and
+runs /usr/bin/make.
+
+treewatch requires inotify support so will only work on Linux.
+
+See TODO for future plans.
+
+See http://atchoo.org/tools/treewatch/ for updates.
