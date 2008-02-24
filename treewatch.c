@@ -26,19 +26,31 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA
  */
 
-#include <stdio.h>
 #include <fcntl.h>
+#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include <sys/inotify.h>
 #include <sys/ioctl.h>
-#define INOTIFY_EVENTSIZE sizeof(struct inotify_event)
 
+#define INOTIFY_EVENTSIZE sizeof(struct inotify_event)
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+static struct option options[] = {
+	{"command", required_argument, 0, 'c'},
+	{"directory", required_argument, 0, 'd'},
+	{"file-endings", required_argument, 0, 'f'},
+	{"help", no_argument, 0, 'h'},
+	{0, 0, 0, 0}
+};
+
 int reconfigure_fd;
+char *command;
+// FIXME char *fileending;
 
 /* Build up an option list for the simpleexec function */
 static char *const *optlist(char *cmdline, char *options)
@@ -123,6 +135,7 @@ static void reconfiguration_handle(void)
 				continue;
 			}
 
+			/*
 			switch(ev.mask){
 				case IN_CLOSE_WRITE:
 					printf("%s (IN_CLOSE_WRITE)\n", filename);
@@ -134,6 +147,7 @@ static void reconfiguration_handle(void)
 					printf("%s (IN_MOVED_TO)\n", filename);
 					break;
 			}
+			*/
 			free(filename);
 
 			printf("----------------\n");
@@ -142,7 +156,7 @@ static void reconfiguration_handle(void)
 				case -1:
 					break;
 				case 0:
-					simpleexec("/usr/bin/make", "");
+					simpleexec(command, "");
 					exit(-1);
 					break;
 			}
@@ -153,33 +167,82 @@ static void reconfiguration_handle(void)
 
 int main(int argc, char *argv[])
 {
-	char *watchdir;
 	int status, select_max = 0;
+	int sopt, optindex;
+	int have_directory = 0;
 
+	command = NULL;
+	// FIXME fileending = NULL;
+
+	/* Initialise inotify */
 	fd_set active_fd_set, read_fd_set;
 	reconfigure_fd = inotify_init();
-	if(reconfigure_fd <= 0)
-	{
-		fprintf(stderr, "Reconfiguration: Error: initialization failed\n");
-		return;
+	if(reconfigure_fd <= 0) {
+		fprintf(stderr, "Error: inotify initialization failed.\n");
+		return 1;
 	}
 
-	/* Test - FIXME: add etc/ggzd/rooms? */
-	inotify_add_watch(reconfigure_fd, ".", IN_CLOSE_WRITE | IN_DELETE | IN_MOVED_TO);
+	/* Parse arguments */
+	while(1) {
+		sopt = getopt_long(argc, argv, "c:d:f:h", options, &optindex);
+		if(sopt == -1) break;
+		switch(sopt) {
+			case 'c':
+				command = optarg;
+				break;
+			case 'd':
+				/* Specify directories to watch */
+				inotify_add_watch(reconfigure_fd, optarg, IN_CLOSE_WRITE | IN_DELETE | IN_MOVED_TO);
+				have_directory = 1;
+				break;
+			case 'f':
+				// FIXME fileending = optarg;
+				break;
+			case 'h':
+	 			printf("treewatch\n\n"),
+				printf("Copyright (C) 2008 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n");
+				printf("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n");
+				printf("treewatch is a program to watch a directory and execute a program on file changes.\n\n");
+				printf("Usage: treewatch \n\n");
+
+				printf(" -c, --command        Specify full path to command to run (default: /usr/bin/make)\n");
+				printf(" -d, --directory      List of directories to watch, separated by a semicolon ;.\n");
+				printf("                      (default: current directory)\n");
+				// FIXME printf(" -f, --file-ending    List of file endings to watch, separated by a semicolon ;.\n");
+				// FIXME printf("                      (default: .c;.cpp;.h)\n");
+				printf(" -h, --help           Display this help.\n");
+				printf("\nSee http://atchoo.org/tools/treewatch/ for updates.\n");
+				exit(0);
+				break;
+			default:
+				exit(0);
+				break;
+		}
+	}
+
+	if(!command) command = strdup("/usr/bin/make");
+	if(!have_directory){
+		inotify_add_watch(reconfigure_fd, ".", IN_CLOSE_WRITE | IN_DELETE | IN_MOVED_TO);
+	}
+	//if(!fileending) fileending = strdup("
+
 
 	FD_ZERO(&active_fd_set);
 	FD_SET(reconfigure_fd, &active_fd_set);
 	select_max = MAX(select_max, reconfigure_fd);
 
+	/* Main program loop - broken out of only by user interrupt. */
 	while(1){
 		read_fd_set = active_fd_set;
 
 		status = select((select_max + 1), &read_fd_set, NULL, NULL, NULL);
 
-			if(FD_ISSET(reconfigure_fd, &read_fd_set)) {
-				reconfiguration_handle();
+		if(FD_ISSET(reconfigure_fd, &read_fd_set)) {
+			reconfiguration_handle();
 			}
 	}
+
+	if(command) free(command);
 
 	return 0;
 }

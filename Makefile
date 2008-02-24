@@ -1,7 +1,7 @@
 CC=gcc
 CXX=g++
 NAME=treewatch
-CFLAGS=-ggdb
+CFLAGS=-Wall -ggdb
 LDFLAGS=-nopie
 
 all : $(NAME)
