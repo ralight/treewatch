@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include <sys/inotify.h>
@@ -45,12 +46,15 @@ static struct option options[] = {
 	{"directory", required_argument, 0, 'd'},
 	{"file-endings", required_argument, 0, 'f'},
 	{"help", no_argument, 0, 'h'},
+	{"wait", no_argument, 0, 'w'},
 	{0, 0, 0, 0}
 };
 
 int reconfigure_fd;
 char *command;
-// FIXME char *fileending;
+char **fileendings;
+int fileendings_count;
+int waitforcommand;
 
 /* Build up an option list for the simpleexec function */
 static char *const *optlist(char *cmdline, char *options)
@@ -110,6 +114,8 @@ static void reconfiguration_handle(void)
 	int diff;
 	char *filename;
 	pid_t pid;
+	int i;
+	int status;
 
 	offset = 0;
 
@@ -127,12 +133,26 @@ static void reconfiguration_handle(void)
 			pending -= diff;
 			offset += diff;
 
-			if(strncmp(filename + strlen(filename) - 2, ".c", 2)
-					&& strncmp(filename + strlen(filename) - 2, ".h", 2)
-					&& strncmp(filename + strlen(filename) - 4, ".cpp", 4)
-					) {
-				free(filename);
-				continue;
+			for(i = 0; i < fileendings_count; i++){
+				if(!strncmp(filename + strlen(filename) - strlen(fileendings[i]), fileendings[i], strlen(fileendings[i]))){
+					printf("----------------\n");
+					i = fileendings_count;
+					pid = fork();
+					switch(pid) {
+						case -1:
+							break;
+						case 0:
+							simpleexec(command, "");
+							exit(-1);
+							break;
+						default:
+							if(waitforcommand){
+								waitpid(pid, &status, 0);
+								printf("----------------\n");
+							}
+							break;
+					}
+				}
 			}
 
 			/*
@@ -149,17 +169,6 @@ static void reconfiguration_handle(void)
 			}
 			*/
 			free(filename);
-
-			printf("----------------\n");
-			pid = fork();
-			switch(pid) {
-				case -1:
-					break;
-				case 0:
-					simpleexec(command, "");
-					exit(-1);
-					break;
-			}
 		}
 	}
 }
@@ -171,8 +180,10 @@ int main(int argc, char *argv[])
 	int sopt, optindex;
 	int have_directory = 0;
 
+	waitforcommand = 1;
 	command = NULL;
-	// FIXME fileending = NULL;
+	fileendings_count = 0;
+	fileendings = NULL;
 
 	/* Initialise inotify */
 	fd_set active_fd_set, read_fd_set;
@@ -184,7 +195,7 @@ int main(int argc, char *argv[])
 
 	/* Parse arguments */
 	while(1) {
-		sopt = getopt_long(argc, argv, "c:d:f:h", options, &optindex);
+		sopt = getopt_long(argc, argv, "c:d:f:hw", options, &optindex);
 		if(sopt == -1) break;
 		switch(sopt) {
 			case 'c':
@@ -196,7 +207,9 @@ int main(int argc, char *argv[])
 				have_directory = 1;
 				break;
 			case 'f':
-				// FIXME fileending = optarg;
+				fileendings_count++;
+				fileendings = realloc(fileendings, sizeof(char *)*fileendings_count);
+				fileendings[fileendings_count-1] = strdup(optarg);
 				break;
 			case 'h':
 	 			printf("treewatch\n\n"),
@@ -206,14 +219,17 @@ int main(int argc, char *argv[])
 				printf("Usage: treewatch \n\n");
 
 				printf(" -c, --command        Specify full path to command to run (default: /usr/bin/make)\n");
-				printf(" -d, --directory      List of directories to watch, separated by a semicolon ;.\n");
+				printf(" -d, --directory      Directory to watch. May be specified multiple times.\n");
 				printf("                      (default: current directory)\n");
-				// FIXME printf(" -f, --file-ending    List of file endings to watch, separated by a semicolon ;.\n");
-				// FIXME printf("                      (default: .c;.cpp;.h)\n");
+				printf(" -f, --file-ending    File endings to watch. May be specified mutiple times.\n");
+				printf("                      (default is all of: .c .cpp .h)\n");
 				printf(" -h, --help           Display this help.\n");
+				printf(" -w, --no-wait        Don't wait for child command to terminate.\n");
 				printf("\nSee http://atchoo.org/tools/treewatch/ for updates.\n");
 				exit(0);
 				break;
+			case 'w':
+				waitforcommand = 0;
 			default:
 				exit(0);
 				break;
@@ -224,8 +240,13 @@ int main(int argc, char *argv[])
 	if(!have_directory){
 		inotify_add_watch(reconfigure_fd, ".", IN_CLOSE_WRITE | IN_DELETE | IN_MOVED_TO);
 	}
-	//if(!fileending) fileending = strdup("
-
+	if(!fileendings_count){
+		fileendings_count = 3;
+		fileendings = malloc(sizeof(char *)*fileendings_count);
+		fileendings[0] = strdup(".c");
+		fileendings[1] = strdup(".h");
+		fileendings[2] = strdup(".cpp");
+	}
 
 	FD_ZERO(&active_fd_set);
 	FD_SET(reconfigure_fd, &active_fd_set);

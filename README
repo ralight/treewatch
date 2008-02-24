@@ -4,10 +4,8 @@ treewatch
 treewatch is a simple program to watch a set of directories and execute a
 program when there is a change in the files within the directories.
 
-As currently configured it watches for changes in .c, .h and .cpp files.
-
-If run with no options it will watch the current directory for changes and
-execute /usr/bin/make on changes.
+If run with no options it will watch the current directory for changes in .c,
+.cpp and .h files and execute /usr/bin/make on changes.
 
 Run with -h to see options.
 

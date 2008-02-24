@@ -4,17 +4,20 @@ NAME=treewatch
 CFLAGS=-Wall -ggdb
 LDFLAGS=-nopie
 
-all : $(NAME)
+all : treewatch
 
-$(NAME).o : $(NAME).c
+treewatch.o : treewatch.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(NAME) : $(NAME).o
+treewatch : treewatch.o
 	$(CC) ${LDFLAGS} -o $@ $^
 
-memtest : $(NAME)
+install : treewatch
+	install treewatch /usr/local/bin/
+
+memtest : treewatch
 	valgrind -v --show-reachable=yes --leak-check=full ./$^
 
 clean :
-	-rm -f $(NAME) *.o
+	-rm -f treewatch *.o
 
