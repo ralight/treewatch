@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
 				fileendings[fileendings_count-1] = strdup(optarg);
 				break;
 			case 'h':
-	 			printf("treewatch\n\n"),
+	 			printf("treewatch version %s (%s)\n\n", VERSION, BUILDDATE),
 				printf("Copyright (C) 2008 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n");
 				printf("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n");
 				printf("treewatch is a program to watch a directory and execute a program on file changes.\n\n");

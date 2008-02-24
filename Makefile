@@ -1,8 +1,12 @@
+VERSION=\"1.0\"
+BUILDDATE=\"20080224\"
+
 CC=gcc
 CXX=g++
 NAME=treewatch
-CFLAGS=-Wall -ggdb
+CFLAGS=-Wall -ggdb -DVERSION="${VERSION}" -DBUILDDATE="${BUILDDATE}"
 LDFLAGS=-nopie
+
 
 all : treewatch
 
