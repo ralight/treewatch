@@ -1,0 +1,4 @@
+* Watch a whole directory tree for changes.
+* Watch a selected list of directories for changes.
+* Specify the command to run and options to pass.
+* Specify the file endings to watch for.
