@@ -45,6 +45,7 @@ static struct option options[] = {
 	{"command", required_argument, 0, 'c'},
 	{"directory", required_argument, 0, 'd'},
 	{"file-endings", required_argument, 0, 'f'},
+	{"command-options", required_argument, 0, 'o'},
 	{"help", no_argument, 0, 'h'},
 	{"wait", no_argument, 0, 'w'},
 	{0, 0, 0, 0}
@@ -52,6 +53,7 @@ static struct option options[] = {
 
 int reconfigure_fd;
 char *command;
+char *command_options;
 char **fileendings;
 int fileendings_count;
 int waitforcommand;
@@ -142,7 +144,7 @@ static void reconfiguration_handle(void)
 						case -1:
 							break;
 						case 0:
-							simpleexec(command, "");
+							simpleexec(command, command_options);
 							exit(-1);
 							break;
 						default:
@@ -182,6 +184,7 @@ int main(int argc, char *argv[])
 
 	waitforcommand = 1;
 	command = NULL;
+	command_options = NULL;
 	fileendings_count = 0;
 	fileendings = NULL;
 
@@ -195,7 +198,7 @@ int main(int argc, char *argv[])
 
 	/* Parse arguments */
 	while(1) {
-		sopt = getopt_long(argc, argv, "c:d:f:hw", options, &optindex);
+		sopt = getopt_long(argc, argv, "c:d:f:ho:w", options, &optindex);
 		if(sopt == -1) break;
 		switch(sopt) {
 			case 'c':
@@ -224,12 +227,17 @@ int main(int argc, char *argv[])
 				printf(" -f, --file-ending    File endings to watch. May be specified mutiple times.\n");
 				printf("                      (default is all of: .c .cpp .h)\n");
 				printf(" -h, --help           Display this help.\n");
+				printf(" -o, --options        Options to pass to the command to run.\n");
 				printf(" -w, --no-wait        Don't wait for child command to terminate.\n");
 				printf("\nSee http://atchoo.org/tools/treewatch/ for updates.\n");
 				exit(0);
 				break;
+			case 'o':
+				command_options = optarg;
+				break;
 			case 'w':
 				waitforcommand = 0;
+				break;
 			default:
 				exit(0);
 				break;
@@ -237,6 +245,8 @@ int main(int argc, char *argv[])
 	}
 
 	if(!command) command = strdup("/usr/bin/make");
+	if(!command_options) command_options = strdup("");
+
 	if(!have_directory){
 		inotify_add_watch(reconfigure_fd, ".", IN_CLOSE_WRITE | IN_DELETE | IN_MOVED_TO);
 	}

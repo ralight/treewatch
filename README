@@ -7,10 +7,16 @@ program when there is a change in the files within the directories.
 If run with no options it will watch the current directory for changes in .c,
 .cpp and .h files and execute /usr/bin/make on changes.
 
-Run with -h to see options.
+Example:
+
+treewatch -c /bin/echo -o "hello world" -f .txt
+
+This example will run /bin/echo with the options "hello world" when files with
+ending .txt are modified in the current directory. Run with -h to see more
+options.
 
 treewatch requires inotify support so will only work on Linux.
 
-See TODO for future plans.
+See TODO for possible future plans.
 
 See http://atchoo.org/tools/treewatch/ for updates.
