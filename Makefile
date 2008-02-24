@@ -5,7 +5,7 @@ CC=gcc
 CXX=g++
 NAME=treewatch
 CFLAGS=-Wall -ggdb -DVERSION="${VERSION}" -DBUILDDATE="${BUILDDATE}"
-LDFLAGS=-nopie
+LDFLAGS=-
 
 
 all : treewatch
