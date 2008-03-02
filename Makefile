@@ -1,7 +1,7 @@
-INSTALLPATH=/usr/local/bin
+prefix=/usr/local
 
-VERSION=\"1.0.1\"
-BUILDDATE=\"20080224\"
+VERSION=\"1.1.0\"
+BUILDDATE=\"20080302\"
 
 CC=gcc
 CXX=g++
@@ -19,10 +19,12 @@ treewatch : treewatch.o
 	$(CC) ${LDFLAGS} -o $@ $^
 
 install : treewatch
-	install treewatch ${INSTALLPATH}
+	install treewatch ${prefix}/bin/
+	install treewatch.1 ${prefix}/man/man1/
 
 uninstall :
-	rm -f ${INSTALLPATH}/treewatch
+	rm -f ${prefix}/bin/treewatch
+	rm -f ${prefix}/man/man1/treewatch.1
 
 memtest : treewatch
 	valgrind -v --show-reachable=yes --leak-check=full ./$^

@@ -1,0 +1,10 @@
+1.1.0 - 20080302
+================
+
+* Added man page.
+* Added the --all-files option which causes treewatch to watch all files in
+  the directories being watched rather than just the specified endings.
+* Added the --verbose which causes the child command exit status to be
+printed.
+* Added filename substitution to the --options parsing so that %f is replaced
+with the name of the file which changed.

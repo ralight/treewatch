@@ -23,18 +23,25 @@
 .Op Fl h
 .Nm
 .Bk -words
+.Op Fl a
 .Op Fl c Ar command
 .Op Fl d Ar directory
 .Op Fl f Ar file
 .Op Fl o Ar 'some options'
+.Op Fl v
 .Op Fl w
 .Sh DESCRIPTION
 .Nm
-This is the description.
+is a program to watch a set of directories and execute a program when there is a change in the files within the directories. It was originally conceived as a way of watching directories of source code (.c, .cpp and .h files) and executing make when the files changed and this is reflected in its default mode of operation which is to watch the current directory for changes in .c, .cpp and .h files and execute /usr/bin/make on changes.
+.Pp
+Any number of directories can be watched, as well as any number of different file endings. It is also possible to watch for changes on all files within a directory.
+.Pp
+.Nm
+will only terminate if it is unable to execute the child command for any reason. 
 .Sh OPTIONS
 .Bl -tag -width indent
-.It Fl h, Fl -help
-Show treewatch usage.
+.It Fl a, Fl -all-files
+Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of --file-ending redundant.
 .It Fl c, Fl -command Ar command
 Specify the child command to run on file changes. The default action is to run /usr/bin/make.
 .It Fl d, Fl -directory Ar directory
@@ -43,8 +50,12 @@ Specify a directory to watch. This only watches the specific directory given. An
 Specify file endings to watch for changes. Any number of file endings can be watched at once. Although this option strictly works on file endings, specifying complete file names works as well. If not given,
 .Nm
 watches .c, .cpp and .h files for changes.
+.It Fl h, Fl -help
+Show treewatch usage.
 .It Fl o, Fl -options Ar 'some options'
-Give a list of options to pass to the child command. Enclose multiple options with quotes.
+Give a list of options to pass to the child command. Enclose multiple options with quotes. The string "%f" can be used to obtain the name of the file that changed.
+.It Fl v, Fl -verbose
+Be more verbose. This is currently limited to printing the return status of the child command (assuming that --no-wait is not given).
 .It Fl w, Fl -no-wait
 Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.
 .El
@@ -55,5 +66,12 @@ without any options is equivalent to running:
 .Pp
 .Nm
 -c /usr/bin/make -d . -f .c -f .cpp -f .h
+.Pp
+Watch /tmp for any file changes and echo a message about which file changed:
+.Pp
+.Nm
+-a -c /bin/echo -o "tmp file changed: %f" -d /tmp
+.Sh BUGS
+Only the first "%f" string is replaced in the options argument.
 .Sh AUTHORS
 .An Roger Light Aq roger@atchoo.org

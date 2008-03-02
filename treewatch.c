@@ -39,24 +39,36 @@
 #include <sys/ioctl.h>
 
 #define INOTIFY_EVENTSIZE sizeof(struct inotify_event)
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 static struct option options[] = {
+	{"all-files", no_argument, 0, 'a'},
 	{"command", required_argument, 0, 'c'},
 	{"directory", required_argument, 0, 'd'},
 	{"file-endings", required_argument, 0, 'f'},
 	{"command-options", required_argument, 0, 'o'},
 	{"help", no_argument, 0, 'h'},
+	{"verbose", no_argument, 0, 'v'},
 	{"wait", no_argument, 0, 'w'},
 	{0, 0, 0, 0}
 };
 
+/* The inotify file descriptor. */
 int reconfigure_fd;
+/* The child command to run. */
 char *command;
+/* The child command options. */
 char *command_options;
+/* List of file ending strings to watch. */
 char **fileendings;
+/* Number of file endings in the list. */
 int fileendings_count;
+/* Should we wait for the child command to finish before continuing. */
 int waitforcommand;
+/* Should we watch all files for changes rather than specific endings? */
+int all_files;
+/* Be verbose? */
+int verbose;
+
 
 /* Build up an option list for the simpleexec function */
 static char *const *optlist(char *cmdline, char *options)
@@ -84,7 +96,7 @@ static char *const *optlist(char *cmdline, char *options)
 	strcpy(list[0], cmdline);
 	list[1] = NULL;
 	listsize = 2;
-	token = strtok(options, " ,.");
+	token = strtok(options, " ");
 	while(token)
 	{
 		listsize++;
@@ -92,11 +104,12 @@ static char *const *optlist(char *cmdline, char *options)
 		list[listsize - 2] = (char*)malloc(strlen(token) + 1);
 		strcpy(list[listsize - 2], token);
 		list[listsize - 1] = NULL;
-		token = strtok(NULL, " ,.");
+		token = strtok(NULL, " ");
 	}
 
 	return list;
 }
+
 
 /* Just execute a program without any checking */
 static void simpleexec(const char *cmdline, const char *options)
@@ -118,6 +131,8 @@ static void reconfiguration_handle(void)
 	pid_t pid;
 	int i;
 	int status;
+	char *modified_options;
+	char *pos;
 
 	offset = 0;
 
@@ -129,6 +144,10 @@ static void reconfiguration_handle(void)
 		while(pending > 0) {
 			memcpy(&ev, &buf[offset], INOTIFY_EVENTSIZE);
 			filename = malloc(ev.len + 1);
+			if(!filename){
+				fprintf(stderr, "Error: Out of memory\n");
+				exit(-1);
+			}
 			memcpy(filename, &buf[offset + INOTIFY_EVENTSIZE], ev.len);
 
 			diff = INOTIFY_EVENTSIZE + ev.len;
@@ -136,40 +155,48 @@ static void reconfiguration_handle(void)
 			offset += diff;
 
 			for(i = 0; i < fileendings_count; i++){
-				if(!strncmp(filename + strlen(filename) - strlen(fileendings[i]), fileendings[i], strlen(fileendings[i]))){
-					printf("----------------\n");
+				if(all_files || !strncmp(filename + strlen(filename) - strlen(fileendings[i]), 
+							fileendings[i], strlen(fileendings[i]))){
 					i = fileendings_count;
 					pid = fork();
 					switch(pid) {
 						case -1:
 							break;
 						case 0:
-							simpleexec(command, command_options);
+							if(strstr(command_options, "%f")){
+								modified_options = calloc((strlen(command_options) - 2 + strlen(filename) + 1),
+											sizeof(char));
+
+								if(!modified_options){
+									fprintf(stderr, "Error: Out of memory\n");
+									exit(-1);
+								}
+
+								sprintf(modified_options, "%s", command_options);
+								pos = strstr(modified_options, "%f");
+								pos[0] = '\0';
+
+								modified_options = strcat(modified_options, filename);
+								modified_options = strcat(modified_options, strstr(command_options, "%f")+2);
+								simpleexec(command, modified_options);
+							}else{
+								simpleexec(command, command_options);
+							}
+							/* If the fork() fails, exit. */
 							exit(-1);
 							break;
 						default:
 							if(waitforcommand){
 								waitpid(pid, &status, 0);
-								printf("----------------\n");
+								if(verbose){
+									printf("--- %s exited with status %d ---\n", command, status);
+								}
 							}
 							break;
 					}
 				}
 			}
 
-			/* inotify event debugging
-			switch(ev.mask){
-				case IN_CLOSE_WRITE:
-					printf("%s (IN_CLOSE_WRITE)\n", filename);
-					break;
-				case IN_DELETE:
-					printf("%s (IN_DELETE)\n", filename);
-					break;
-				case IN_MOVED_TO:
-					printf("%s (IN_MOVED_TO)\n", filename);
-					break;
-			}
-			*/
 			free(filename);
 		}
 	}
@@ -178,8 +205,9 @@ static void reconfiguration_handle(void)
 
 int main(int argc, char *argv[])
 {
-	int status, select_max = 0;
+	int status;
 	int sopt, optindex;
+	/* has the user used a -d argument? If not then use the default directory. */
 	int have_directory = 0;
 
 	waitforcommand = 1;
@@ -187,6 +215,8 @@ int main(int argc, char *argv[])
 	command_options = NULL;
 	fileendings_count = 0;
 	fileendings = NULL;
+	all_files = 0;
+	verbose = 0;
 
 	/* Initialise inotify */
 	fd_set active_fd_set, read_fd_set;
@@ -198,9 +228,12 @@ int main(int argc, char *argv[])
 
 	/* Parse arguments */
 	while(1) {
-		sopt = getopt_long(argc, argv, "c:d:f:ho:w", options, &optindex);
+		sopt = getopt_long(argc, argv, "ac:d:f:ho:vw", options, &optindex);
 		if(sopt == -1) break;
 		switch(sopt) {
+			case 'a':
+				all_files = 1;
+				break;
 			case 'c':
 				command = optarg;
 				break;
@@ -220,8 +253,9 @@ int main(int argc, char *argv[])
 				printf("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n");
 				printf("treewatch is a program to watch a directory and execute a program on file changes.\n\n");
 				printf("Usage: treewatch -h\n");
-				printf("       treewatch [-c command] [-d dir] [-f file] [-o \"some options\"] [-w]\n\n");
-
+				printf("       treewatch [-aw] [-c command] [-d dir] [-f file] [-o \"some options\"]\n\n");
+				printf(" -a, --all-files      Watch all files in the directories. Makes any --file-ending \n");
+				printf("                      arguments redundant.\n");
 				printf(" -c, --command        Specify full path to command to run (default: /usr/bin/make)\n");
 				printf(" -d, --directory      Directory to watch. May be specified multiple times.\n");
 				printf("                      (default: current directory)\n");
@@ -229,12 +263,16 @@ int main(int argc, char *argv[])
 				printf("                      (default is all of: .c .cpp .h)\n");
 				printf(" -h, --help           Display this help.\n");
 				printf(" -o, --options        Options to pass to the command to run.\n");
+				printf(" -v, --verbose        Be more verbose (print child exit status).\n");
 				printf(" -w, --no-wait        Don't wait for child command to terminate.\n");
 				printf("\nSee http://atchoo.org/tools/treewatch/ for updates.\n");
 				exit(0);
 				break;
 			case 'o':
 				command_options = optarg;
+				break;
+			case 'v':
+				verbose = 1;
 				break;
 			case 'w':
 				waitforcommand = 0;
@@ -245,6 +283,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	/* Set up the defaults if the user hasn't supplied the given arguments. */
 	if(!command) command = strdup("/usr/bin/make");
 	if(!command_options) command_options = strdup("");
 
@@ -261,13 +300,12 @@ int main(int argc, char *argv[])
 
 	FD_ZERO(&active_fd_set);
 	FD_SET(reconfigure_fd, &active_fd_set);
-	select_max = MAX(select_max, reconfigure_fd);
 
 	/* Main program loop - broken out of only by user interrupt. */
 	while(1){
 		read_fd_set = active_fd_set;
 
-		status = select((select_max + 1), &read_fd_set, NULL, NULL, NULL);
+		status = select(reconfigure_fd + 1, &read_fd_set, NULL, NULL, NULL);
 
 		if(FD_ISSET(reconfigure_fd, &read_fd_set)) {
 			reconfiguration_handle();
