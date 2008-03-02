@@ -1,0 +1,59 @@
+.\"  -*- nroff -*-
+.\"
+.\" treewatch.1
+.\"
+.\" Author: Roger Light <roger@atchoo.org>
+.\" Copyright (C) Roger Light <roger@atchoo.org>, UK
+.\"               All rights reserved
+.\"
+.\" Created:
+.\"
+.\" $$
+.\"
+.\" .Th treewatch 1 local
+.Dd 1 March, 2008
+.Dt TREEWATCH 1
+.Os GNU/Linux
+.Sh NAME
+.Nm treewatch
+.Nd watch directories and execute program on file changes
+.Sh SYNOPSIS
+.Nm
+.Bk -words
+.Op Fl h
+.Nm
+.Bk -words
+.Op Fl c Ar command
+.Op Fl d Ar directory
+.Op Fl f Ar file
+.Op Fl o Ar 'some options'
+.Op Fl w
+.Sh DESCRIPTION
+.Nm
+This is the description.
+.Sh OPTIONS
+.Bl -tag -width indent
+.It Fl h, Fl -help
+Show treewatch usage.
+.It Fl c, Fl -command Ar command
+Specify the child command to run on file changes. The default action is to run /usr/bin/make.
+.It Fl d, Fl -directory Ar directory
+Specify a directory to watch. This only watches the specific directory given. Any number of directories can be watched at once. If this option is not used, the default action is to watch the current directory.
+.It Fl f, Fl -file-ending Ar file
+Specify file endings to watch for changes. Any number of file endings can be watched at once. Although this option strictly works on file endings, specifying complete file names works as well. If not given,
+.Nm
+watches .c, .cpp and .h files for changes.
+.It Fl o, Fl -options Ar 'some options'
+Give a list of options to pass to the child command. Enclose multiple options with quotes.
+.It Fl w, Fl -no-wait
+Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.
+.El
+.Sh EXAMPLES
+Running 
+.Nm
+without any options is equivalent to running:
+.Pp
+.Nm
+-c /usr/bin/make -d . -f .c -f .cpp -f .h
+.Sh AUTHORS
+.An Roger Light Aq roger@atchoo.org
