@@ -6,7 +6,6 @@ BUILDDATE=\"20080302\"
 
 CC=gcc
 CXX=g++
-NAME=treewatch
 CFLAGS=-Wall -ggdb -DVERSION="${VERSION}" -DBUILDDATE="${BUILDDATE}"
 LDFLAGS=
 
