@@ -33,11 +33,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <libintl.h>
 
 #include <sys/inotify.h>
 #include <sys/ioctl.h>
 
 #define INOTIFY_EVENTSIZE sizeof(struct inotify_event)
+
+#define _(String) gettext(String)
 
 static struct option options[] = {
 	{"all-files", no_argument, 0, 'a'},
@@ -144,7 +147,7 @@ static void reconfiguration_handle(void)
 			memcpy(&ev, &buf[offset], INOTIFY_EVENTSIZE);
 			filename = malloc(ev.len + 1);
 			if(!filename){
-				fprintf(stderr, "Error: Out of memory\n");
+				fprintf(stderr, _("Error: Out of memory\n"));
 				exit(-1);
 			}
 			memcpy(filename, &buf[offset + INOTIFY_EVENTSIZE], ev.len);
@@ -167,7 +170,7 @@ static void reconfiguration_handle(void)
 											sizeof(char));
 
 								if(!modified_options){
-									fprintf(stderr, "Error: Out of memory\n");
+									fprintf(stderr, _("Error: Out of memory\n"));
 									exit(-1);
 								}
 
@@ -188,7 +191,7 @@ static void reconfiguration_handle(void)
 							if(waitforcommand){
 								waitpid(pid, &status, 0);
 								if(verbose){
-									printf("--- %s exited with status %d ---\n", command, status);
+									printf(_("--- %s exited with status %d ---\n"), command, status);
 								}
 							}
 							break;
@@ -221,7 +224,7 @@ int main(int argc, char *argv[])
 	fd_set active_fd_set, read_fd_set;
 	reconfigure_fd = inotify_init();
 	if(reconfigure_fd <= 0) {
-		fprintf(stderr, "Error: inotify initialization failed.\n");
+		fprintf(stderr, _("Error: inotify initialization failed.\n"));
 		return 1;
 	}
 
@@ -247,24 +250,21 @@ int main(int argc, char *argv[])
 				fileendings[fileendings_count-1] = strdup(optarg);
 				break;
 			case 'h':
-	 			printf("treewatch version %s (%s)\n\n", VERSION, BUILDDATE),
-				printf("Copyright (C) 2008 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n");
-				printf("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n");
-				printf("treewatch is a program to watch a directory and execute a program on file changes.\n\n");
-				printf("Usage: treewatch -h\n");
-				printf("       treewatch [-aw] [-c command] [-d dir] [-f file] [-o \"some options\"]\n\n");
-				printf(" -a, --all-files      Watch all files in the directories. Makes any --file-ending \n");
-				printf("                      arguments redundant.\n");
-				printf(" -c, --command        Specify full path to command to run (default: /usr/bin/make)\n");
-				printf(" -d, --directory      Directory to watch. May be specified multiple times.\n");
-				printf("                      (default: current directory)\n");
-				printf(" -f, --file-ending    File endings to watch. May be specified mutiple times.\n");
-				printf("                      (default is all of: .c .cpp .h)\n");
-				printf(" -h, --help           Display this help.\n");
-				printf(" -o, --options        Options to pass to the command to run.\n");
-				printf(" -v, --verbose        Be more verbose (print child exit status).\n");
-				printf(" -w, --no-wait        Don't wait for child command to terminate.\n");
-				printf("\nSee http://atchoo.org/tools/treewatch/ for updates.\n");
+	 			printf(_("treewatch version %s (build date: %s)\n\n"), VERSION, BUILDDATE),
+				printf(_("Copyright (C) 2008 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n"));
+				printf(_("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n"));
+				printf(_("treewatch is a program to watch a directory and execute a program on file changes.\n\n"));
+				printf(_("Usage: treewatch -h\n"));
+				printf(_("       treewatch [-aw] [-c command] [-d dir] [-f file] [-o \"some options\"]\n\n"));
+				printf(_(" -a, --all-files      Watch all files in the directories. Makes any --file-ending \n                      arguments redundant.\n"));
+				printf(_(" -c, --command        Specify full path to command to run (default: /usr/bin/make)\n"));
+				printf(_(" -d, --directory      Directory to watch. May be specified multiple times.\n                      (default: current directory)\n"));
+				printf(_(" -f, --file-ending    File endings to watch. May be specified mutiple times.\n                      (default is to watch all of: .c .cpp .h)\n"));
+				printf(_(" -h, --help           Display this help.\n"));
+				printf(_(" -o, --options        Options to pass to the command to run.\n"));
+				printf(_(" -v, --verbose        Be more verbose (print child exit status).\n"));
+				printf(_(" -w, --no-wait        Don't wait for child command to terminate.\n"));
+				printf(_("\nSee http://atchoo.org/tools/treewatch/ for updates.\n"));
 				exit(0);
 				break;
 			case 'o':

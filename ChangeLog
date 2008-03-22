@@ -2,6 +2,7 @@ x.x.x - xxxxxxxx
 ================
 
 * Improved Makefile (DESTDIR support)
+* i18n support.
 
 
 1.1.0 - 20080302

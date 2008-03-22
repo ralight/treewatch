@@ -1,10 +1,6 @@
 include ../config.mk
 
-treewatch_SOURCES= \
-	calculation.c \
-	output.c \
-	treewatch.c \
-	tokens.c
+treewatch_SOURCES= treewatch.c
 treewatch_OBJS=$(treewatch_SOURCES:.c=.o)
 
 .PHONY : all clean install uninstall

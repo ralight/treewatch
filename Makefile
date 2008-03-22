@@ -1,6 +1,6 @@
 include config.mk
 
-DIRS=man src
+DIRS=man po src
 
 .PHONY : all treewatch clean install uninstall dist dist-clean sign copy
 
@@ -20,7 +20,7 @@ uninstall :
 
 dist : clean
 	mkdir -p treewatch-${VERSION}
-	cp -r images man src ChangeLog COPYING Makefile README TODO treewatch-${VERSION}/
+	cp -r images man src ChangeLog COPYING Makefile README TODO config.mk treewatch-${VERSION}/
 	tar -jcf treewatch-${VERSION}.tar.bz2 treewatch-${VERSION}/
 
 dist-clean : clean

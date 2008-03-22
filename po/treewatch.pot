@@ -1,0 +1,134 @@
+# treewatch
+# Copyright (C) 2008 Roger Light
+# This file is distributed under the same license as the treewatch package.
+# Roger Light <roger@atchoo.org>, 2008.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-03-22 21:17+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/treewatch.c:150 ../src/treewatch.c:173
+#, c-format
+msgid "Error: Out of memory\n"
+msgstr ""
+
+#: ../src/treewatch.c:194
+#, c-format
+msgid "--- %s exited with status %d ---\n"
+msgstr ""
+
+#: ../src/treewatch.c:227
+#, c-format
+msgid "Error: inotify initialization failed.\n"
+msgstr ""
+
+#: ../src/treewatch.c:253
+#, c-format
+msgid ""
+"treewatch version %s (build date: %s)\n"
+"\n"
+msgstr ""
+
+#: ../src/treewatch.c:254
+#, c-format
+msgid ""
+"Copyright (C) 2008 Roger Light\n"
+"http://atchoo.org/tools/treewatch/\n"
+"\n"
+msgstr ""
+
+#: ../src/treewatch.c:255
+#, c-format
+msgid ""
+"treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch "
+"freely\n"
+"as described in the COPYING file distributed with this file.\n"
+"\n"
+msgstr ""
+
+#: ../src/treewatch.c:256
+#, c-format
+msgid ""
+"treewatch is a program to watch a directory and execute a program on file "
+"changes.\n"
+"\n"
+msgstr ""
+
+#: ../src/treewatch.c:257
+#, c-format
+msgid "Usage: treewatch -h\n"
+msgstr ""
+
+#: ../src/treewatch.c:258
+#, c-format
+msgid ""
+"       treewatch [-aw] [-c command] [-d dir] [-f file] [-o \"some options"
+"\"]\n"
+"\n"
+msgstr ""
+
+#: ../src/treewatch.c:259
+#, c-format
+msgid ""
+" -a, --all-files      Watch all files in the directories. Makes any --file-"
+"ending \n"
+"                      arguments redundant.\n"
+msgstr ""
+
+#: ../src/treewatch.c:260
+#, c-format
+msgid ""
+" -c, --command        Specify full path to command to run (default: /usr/bin/"
+"make)\n"
+msgstr ""
+
+#: ../src/treewatch.c:261
+#, c-format
+msgid ""
+" -d, --directory      Directory to watch. May be specified multiple times.\n"
+"                      (default: current directory)\n"
+msgstr ""
+
+#: ../src/treewatch.c:262
+#, c-format
+msgid ""
+" -f, --file-ending    File endings to watch. May be specified mutiple "
+"times.\n"
+"                      (default is to watch all of: .c .cpp .h)\n"
+msgstr ""
+
+#: ../src/treewatch.c:263
+#, c-format
+msgid " -h, --help           Display this help.\n"
+msgstr ""
+
+#: ../src/treewatch.c:264
+#, c-format
+msgid " -o, --options        Options to pass to the command to run.\n"
+msgstr ""
+
+#: ../src/treewatch.c:265
+#, c-format
+msgid " -v, --verbose        Be more verbose (print child exit status).\n"
+msgstr ""
+
+#: ../src/treewatch.c:266
+#, c-format
+msgid " -w, --no-wait        Don't wait for child command to terminate.\n"
+msgstr ""
+
+#: ../src/treewatch.c:267
+#, c-format
+msgid ""
+"\n"
+"See http://atchoo.org/tools/treewatch/ for updates.\n"
+msgstr ""
