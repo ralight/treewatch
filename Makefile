@@ -1,35 +1,33 @@
-prefix=/usr/local
-mandir=${prefix}/man
+include config.mk
 
-VERSION=\"1.1.0\"
-BUILDDATE=\"20080302\"
+DIRS=man src
 
-CC=gcc
-CXX=g++
-CFLAGS=-Wall -ggdb -DVERSION="${VERSION}" -DBUILDDATE="${BUILDDATE}"
-LDFLAGS=
-
-.PHONY : all install uninstall memtest clean
+.PHONY : all treewatch clean install uninstall dist dist-clean sign copy
 
 all : treewatch
 
-treewatch.o : treewatch.c
-	$(CC) -c $(CFLAGS) -o $@ $<
-
-treewatch : treewatch.o
-	$(CC) ${LDFLAGS} -o $@ $^
-
-install : treewatch
-	install treewatch ${DESTDIR}${prefix}/bin/
-	install treewatch.1 ${DESTDIR}${mandir}/man/man1/
-
-uninstall :
-	rm -f ${DESTDIR}${prefix}/bin/treewatch
-	rm -f ${DESTDIR}${mandir}/man1/treewatch.1
-
-memtest : treewatch
-	valgrind -v --show-reachable=yes --leak-check=full ./$^
+treewatch :
+	for d in ${DIRS}; do $(MAKE) -C $${d}; done
 
 clean :
-	-rm -f treewatch *.o
+	for d in ${DIRS}; do $(MAKE) -C $${d} clean; done
 
+install : treewatch
+	@for d in ${DIRS}; do $(MAKE) -C $${d} install; done
+
+uninstall :
+	@for d in ${DIRS}; do $(MAKE) -C $${d} uninstall; done
+
+dist : clean
+	mkdir -p treewatch-${VERSION}
+	cp -r images man src ChangeLog COPYING Makefile README TODO treewatch-${VERSION}/
+	tar -jcf treewatch-${VERSION}.tar.bz2 treewatch-${VERSION}/
+
+dist-clean : clean
+	-rm -rf treewatch-${VERSION}*
+
+sign : dist
+	gpg --detach-sign -a treewatch-${VERSION}.tar.bz2
+
+copy : sign
+	scp treewatch-${VERSION}.tar.bz2 treewatch-${VERSION}.tar.bz2.asc atchoo:atchoo.org/tools/treewatch/files/
