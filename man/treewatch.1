@@ -11,9 +11,9 @@
 .\" $$
 .\"
 .\" .Th treewatch 1 local
-.Dd 1 March, 2008
+.Dd 1 May, 2008
 .Dt TREEWATCH 1
-.Os GNU/Linux
+.Os GNU/Linux 2
 .Sh NAME
 .Nm treewatch
 .Nd watch directories and execute program on file changes
@@ -40,25 +40,32 @@ Any number of directories can be watched, as well as any number of different fil
 will only terminate if it is unable to execute the child command for any reason. 
 .Sh OPTIONS
 .Bl -tag -width indent
-.It Fl a, Fl -all-files
+.It -a, --all-files
 Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of --file-ending redundant.
-.It Fl c, Fl -command Ar command
+.It -c, --command Ar command
 Specify the child command to run on file changes. The default action is to run /usr/bin/make.
-.It Fl d, Fl -directory Ar directory
+.It -d, --directory Ar directory
 Specify a directory to watch. This only watches the specific directory given. Any number of directories can be watched at once. If this option is not used, the default action is to watch the current directory.
-.It Fl f, Fl -file-ending Ar file
+.It -f, --file-ending Ar file
 Specify file endings to watch for changes. Any number of file endings can be watched at once. Although this option strictly works on file endings, specifying complete file names works as well. If not given,
 .Nm
 watches .c, .cpp and .h files for changes.
-.It Fl h, Fl -help
+.It -h, --help
 Show treewatch usage.
-.It Fl o, Fl -options Ar 'some options'
+.It -o, --options Ar 'some options'
 Give a list of options to pass to the child command. Enclose multiple options with quotes. The string "%f" can be used to obtain the name of the file that changed.
-.It Fl v, Fl -verbose
+.It -v, --verbose
 Be more verbose. This is currently limited to printing the return status of the child command (assuming that --no-wait is not given).
-.It Fl w, Fl -no-wait
+.It -w, --no-wait
 Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.
 .El
+.Sh SIGNALS
+.Nm
+will execute the specified command upon receiving
+.Sm
+.Sy SIGUSR1
+, regardless of whether any files have changed.
+.Sm
 .Sh EXAMPLES
 Running 
 .Nm

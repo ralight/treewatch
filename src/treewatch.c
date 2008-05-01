@@ -27,13 +27,14 @@
 
 #include <fcntl.h>
 #include <getopt.h>
+#include <libintl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <libintl.h>
 
 #include <sys/inotify.h>
 #include <sys/ioctl.h>
@@ -122,6 +123,57 @@ static void simpleexec(const char *cmdline, const char *options)
 }
 
 
+/* Execute the specified command. If this is caused by a file changing, pass
+ * the filename in and possibly use it in the command options. */
+void execute_command(const char *filename)
+{
+	char *modified_options;
+	char *pos;
+
+	if(filename && strstr(command_options, "%f")){
+		modified_options = calloc((strlen(command_options) - 2 + strlen(filename) + 1), sizeof(char));
+
+		if(!modified_options){
+			fprintf(stderr, _("Error: Out of memory\n"));
+			exit(-1);
+		}
+
+		sprintf(modified_options, "%s", command_options);
+		pos = strstr(modified_options, "%f");
+		pos[0] = '\0';
+
+		modified_options = strcat(modified_options, filename);
+		modified_options = strcat(modified_options, strstr(command_options, "%f")+2);
+		simpleexec(command, modified_options);
+	}else{
+		simpleexec(command, command_options);
+	}
+}
+
+
+/* Respond to a USR1 signal. */
+void sigusr_handle(int signum)
+{
+	pid_t pid;
+	int status;
+
+	pid = fork();
+
+	switch(pid){
+		case -1:
+			break;
+		case 0:
+			/* child */
+			execute_command(NULL);
+			exit(0);
+		default:
+			waitpid(pid, &status, 0);
+			break;
+	}
+}
+
+
+/* Called when there is a change on the inotify fd. */
 static void reconfiguration_handle(void)
 {
 	int pending;
@@ -133,8 +185,6 @@ static void reconfiguration_handle(void)
 	pid_t pid;
 	int i;
 	int status;
-	char *modified_options;
-	char *pos;
 
 	offset = 0;
 
@@ -165,25 +215,7 @@ static void reconfiguration_handle(void)
 						case -1:
 							break;
 						case 0:
-							if(strstr(command_options, "%f")){
-								modified_options = calloc((strlen(command_options) - 2 + strlen(filename) + 1),
-											sizeof(char));
-
-								if(!modified_options){
-									fprintf(stderr, _("Error: Out of memory\n"));
-									exit(-1);
-								}
-
-								sprintf(modified_options, "%s", command_options);
-								pos = strstr(modified_options, "%f");
-								pos[0] = '\0';
-
-								modified_options = strcat(modified_options, filename);
-								modified_options = strcat(modified_options, strstr(command_options, "%f")+2);
-								simpleexec(command, modified_options);
-							}else{
-								simpleexec(command, command_options);
-							}
+							execute_command(filename);
 							/* If the fork() fails, exit. */
 							exit(-1);
 							break;
@@ -300,6 +332,8 @@ int main(int argc, char *argv[])
 	FD_ZERO(&active_fd_set);
 	FD_SET(reconfigure_fd, &active_fd_set);
 
+	signal(SIGUSR1, sigusr_handle);
+
 	/* Main program loop - broken out of only by user interrupt. */
 	while(1){
 		read_fd_set = active_fd_set;
@@ -308,7 +342,7 @@ int main(int argc, char *argv[])
 
 		if(FD_ISSET(reconfigure_fd, &read_fd_set)) {
 			reconfiguration_handle();
-			}
+		}
 	}
 
 	if(command) free(command);
