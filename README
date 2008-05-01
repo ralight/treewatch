@@ -19,5 +19,6 @@ treewatch requires inotify support so will only work on Linux.
 
 See TODO for possible future plans.
 
-See http://atchoo.org/tools/treewatch/ for updates or contact roger@atchoo.org
-for bugs / suggestions.
+See http://atchoo.org/tools/treewatch/ for updates,
+http://launchpad.net/treewatch to report bugs, make suggestions or do
+translations. For anything else, contact roger@atchoo.org.
