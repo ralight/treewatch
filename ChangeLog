@@ -1,4 +1,4 @@
-x.x.x - xxxxxxxx
+1.2.0 - 20080322
 ================
 
 * Improved Makefile (DESTDIR support)
