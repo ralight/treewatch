@@ -40,23 +40,23 @@ Any number of directories can be watched, as well as any number of different fil
 will only terminate if it is unable to execute the child command for any reason. 
 .Sh OPTIONS
 .Bl -tag -width indent
-.It -a, --all-files
+.It \-a, \-\-all-files
 Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of --file-ending redundant.
-.It -c, --command Ar command
+.It \-c, \-\-command Ar command
 Specify the child command to run on file changes. The default action is to run /usr/bin/make.
-.It -d, --directory Ar directory
+.It \-d, \-\-directory Ar directory
 Specify a directory to watch. This only watches the specific directory given. Any number of directories can be watched at once. If this option is not used, the default action is to watch the current directory.
-.It -f, --file-ending Ar file
+.It \-f, \-\-file-ending Ar file
 Specify file endings to watch for changes. Any number of file endings can be watched at once. Although this option strictly works on file endings, specifying complete file names works as well. If not given,
 .Nm
 watches .c, .cpp and .h files for changes.
-.It -h, --help
+.It \-h, \-\-help
 Show treewatch usage.
-.It -o, --options Ar 'some options'
+.It \-o, \-\-options Ar 'some options'
 Give a list of options to pass to the child command. Enclose multiple options with quotes. The string "%f" can be used to obtain the name of the file that changed.
-.It -v, --verbose
+.It \-v, \-\-verbose
 Be more verbose. This is currently limited to printing the return status of the child command (assuming that --no-wait is not given).
-.It -w, --no-wait
+.It \-w, \-\-no-wait
 Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.
 .El
 .Sh SIGNALS
@@ -72,12 +72,12 @@ Running
 without any options is equivalent to running:
 .Pp
 .Nm
--c /usr/bin/make -d . -f .c -f .cpp -f .h
+\-c /usr/bin/make \-d . \-f .c \-f .cpp \-f .h
 .Pp
 Watch /tmp for any file changes and echo a message about which file changed:
 .Pp
 .Nm
--a -c /bin/echo -o "tmp file changed: %f" -d /tmp
+\-a \-c /bin/echo \-o "tmp file changed: %f" \-d /tmp
 .Sh BUGS
 Only the first "%f" string is replaced in the options argument.
 .Sh AUTHORS
