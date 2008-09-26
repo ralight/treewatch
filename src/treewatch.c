@@ -167,7 +167,12 @@ void sigusr_handle(int signum)
 			execute_command(NULL);
 			exit(0);
 		default:
-			waitpid(pid, &status, 0);
+			if(waitforcommand){
+				waitpid(pid, &status, 0);
+				if(verbose){
+					printf(_("--- %s exited with status %d ---\n"), command, status);
+				}
+			}
 			break;
 	}
 }
