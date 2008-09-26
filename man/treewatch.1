@@ -41,7 +41,7 @@ will only terminate if it is unable to execute the child command for any reason.
 .Sh OPTIONS
 .Bl -tag -width indent
 .It \-a, \-\-all-files
-Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of --file-ending redundant.
+Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of \-\-file\-ending redundant.
 .It \-c, \-\-command Ar command
 Specify the child command to run on file changes. The default action is to run /usr/bin/make.
 .It \-d, \-\-directory Ar directory
@@ -55,7 +55,7 @@ Show treewatch usage.
 .It \-o, \-\-options Ar 'some options'
 Give a list of options to pass to the child command. Enclose multiple options with quotes. The string "%f" can be used to obtain the name of the file that changed.
 .It \-v, \-\-verbose
-Be more verbose. This is currently limited to printing the return status of the child command (assuming that --no-wait is not given).
+Be more verbose. This is currently limited to printing the return status of the child command (assuming that \-\-no\-wait is not given).
 .It \-w, \-\-no-wait
 Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.
 .El

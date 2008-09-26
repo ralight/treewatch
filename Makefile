@@ -7,16 +7,16 @@ DIRS=man po src
 all : treewatch
 
 treewatch :
-	for d in ${DIRS}; do $(MAKE) -C $${d}; done
+	@for d in ${DIRS}; do $(MAKE) -C $${d}; done
 
 clean :
-	for d in ${DIRS}; do $(MAKE) -C $${d} clean; done
+	@for d in ${DIRS}; do $(MAKE) -C $${d} $@; done
 
 install : treewatch
-	@for d in ${DIRS}; do $(MAKE) -C $${d} install; done
+	@for d in ${DIRS}; do $(MAKE) -C $${d} $@; done
 
 uninstall :
-	@for d in ${DIRS}; do $(MAKE) -C $${d} uninstall; done
+	@for d in ${DIRS}; do $(MAKE) -C $${d} $@; done
 
 dist : clean
 	mkdir -p treewatch-${VERSION}
