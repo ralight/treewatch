@@ -12,8 +12,8 @@ Example:
 treewatch -c /bin/echo -o "hello world" -f .txt
 
 This example will run /bin/echo with the options "hello world" when files with
-ending .txt are modified in the current directory. Run with -h to see more
-options.
+ending .txt are modified in the current directory. Run with -h or see the man
+page for more options.
 
 treewatch requires inotify support so will only work on Linux.
 
