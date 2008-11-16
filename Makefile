@@ -18,9 +18,9 @@ install : treewatch
 uninstall :
 	@for d in ${DIRS}; do $(MAKE) -C $${d} $@; done
 
-dist : clean
+dist : dist-clean
 	mkdir -p treewatch-${VERSION}
-	cp -r images man src ChangeLog COPYING Makefile README TODO config.mk treewatch-${VERSION}/
+	cp -r images man po src ChangeLog COPYING Makefile README TODO config.mk treewatch-${VERSION}/
 	tar -jcf treewatch-${VERSION}.tar.bz2 treewatch-${VERSION}/
 
 dist-clean : clean
