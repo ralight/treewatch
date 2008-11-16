@@ -8,7 +8,7 @@ treewatch_OBJS=$(treewatch_SOURCES:.c=.o)
 all : treewatch
 
 treewatch : $(treewatch_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 %.o : %.c
 	$(CC) -DVERSION=\"${VERSION}\" -DBUILDDATE=\"${BUILDDATE}\" ${CFLAGS} -c $^
