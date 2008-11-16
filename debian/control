@@ -1,0 +1,18 @@
+Source: treewatch
+Section: utils
+Priority: optional
+Maintainer: Roger Light <roger@atchoo.org>
+Build-Depends: debhelper (>= 6)
+Standards-Version: 3.8.0
+Homepage: http://atchoo.org/tools/treewatch/
+
+Package: treewatch
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Watch directories for file changes then execute a program.
+ treewatch is a program to watch a set of directories and execute a program
+ when there is a change in the files within the directories. It was originally
+ conceived as a way of watching directories of source code (.c, .cpp and .h
+ files) and executing make when the files changed and this is reflected in its
+ default mode of operation which is to watch the current directory for changes
+ in .c, .cpp and .h files and execute /usr/bin/make on changes.
