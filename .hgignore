@@ -1,0 +1,6 @@
+syntax: glob
+
+po/*.mo
+po/*.pot~
+src/*.o
+src/treewatch

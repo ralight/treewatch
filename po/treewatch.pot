@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-01 15:50+0100\n"
+"POT-Creation-Date: 2008-11-16 13:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,29 +16,29 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/treewatch.c:137 ../src/treewatch.c:200
+#: ../src/treewatch.c:137 ../src/treewatch.c:205
 #, c-format
 msgid "Error: Out of memory\n"
 msgstr ""
 
-#: ../src/treewatch.c:226
+#: ../src/treewatch.c:173 ../src/treewatch.c:231
 #, c-format
 msgid "--- %s exited with status %d ---\n"
 msgstr ""
 
-#: ../src/treewatch.c:259
+#: ../src/treewatch.c:264
 #, c-format
 msgid "Error: inotify initialization failed.\n"
 msgstr ""
 
-#: ../src/treewatch.c:285
+#: ../src/treewatch.c:290
 #, c-format
 msgid ""
 "treewatch version %s (build date: %s)\n"
 "\n"
 msgstr ""
 
-#: ../src/treewatch.c:286
+#: ../src/treewatch.c:291
 #, c-format
 msgid ""
 "Copyright (C) 2008 Roger Light\n"
@@ -46,7 +46,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../src/treewatch.c:287
+#: ../src/treewatch.c:292
 #, c-format
 msgid ""
 "treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch "
@@ -55,7 +55,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../src/treewatch.c:288
+#: ../src/treewatch.c:293
 #, c-format
 msgid ""
 "treewatch is a program to watch a directory and execute a program on file "
@@ -63,12 +63,12 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../src/treewatch.c:289
+#: ../src/treewatch.c:294
 #, c-format
 msgid "Usage: treewatch -h\n"
 msgstr ""
 
-#: ../src/treewatch.c:290
+#: ../src/treewatch.c:295
 #, c-format
 msgid ""
 "       treewatch [-aw] [-c command] [-d dir] [-f file] [-o \"some options"
@@ -76,7 +76,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../src/treewatch.c:291
+#: ../src/treewatch.c:296
 #, c-format
 msgid ""
 " -a, --all-files      Watch all files in the directories. Makes any --file-"
@@ -84,21 +84,21 @@ msgid ""
 "                      arguments redundant.\n"
 msgstr ""
 
-#: ../src/treewatch.c:292
+#: ../src/treewatch.c:297
 #, c-format
 msgid ""
 " -c, --command        Specify full path to command to run (default: /usr/bin/"
 "make)\n"
 msgstr ""
 
-#: ../src/treewatch.c:293
+#: ../src/treewatch.c:298
 #, c-format
 msgid ""
 " -d, --directory      Directory to watch. May be specified multiple times.\n"
 "                      (default: current directory)\n"
 msgstr ""
 
-#: ../src/treewatch.c:294
+#: ../src/treewatch.c:299
 #, c-format
 msgid ""
 " -f, --file-ending    File endings to watch. May be specified mutiple "
@@ -106,27 +106,27 @@ msgid ""
 "                      (default is to watch all of: .c .cpp .h)\n"
 msgstr ""
 
-#: ../src/treewatch.c:295
+#: ../src/treewatch.c:300
 #, c-format
 msgid " -h, --help           Display this help.\n"
 msgstr ""
 
-#: ../src/treewatch.c:296
+#: ../src/treewatch.c:301
 #, c-format
 msgid " -o, --options        Options to pass to the command to run.\n"
 msgstr ""
 
-#: ../src/treewatch.c:297
+#: ../src/treewatch.c:302
 #, c-format
 msgid " -v, --verbose        Be more verbose (print child exit status).\n"
 msgstr ""
 
-#: ../src/treewatch.c:298
+#: ../src/treewatch.c:303
 #, c-format
 msgid " -w, --no-wait        Don't wait for child command to terminate.\n"
 msgstr ""
 
-#: ../src/treewatch.c:299
+#: ../src/treewatch.c:304
 #, c-format
 msgid ""
 "\n"
