@@ -2,7 +2,7 @@ VERSION=1.3.2
 BUILDDATE=20080926
 
 CFLAGS=-ggdb -Wall -O2
-LDFLAGS=-lm
+LDFLAGS=
 
 CC=gcc
 INSTALL=install
