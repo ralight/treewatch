@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml-stylesheet type="text/xsl" href="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd">
+
+
+<refentry xml:id="treewatch">
+	<refmeta>
+		<refentrytitle>treewatch</refentrytitle>
+		<manvolnum>1</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>treewatch</refname>
+		<refpurpose>watch directories and execute a program on file changes</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>treewatch</command>
+			<arg choice='plain'>
+				<group choice='req'>
+					<arg choice='plain'><option>-h</option></arg>
+					<arg choice='plain'><option>--help</option></arg>
+				</group>
+			</arg>
+		</cmdsynopsis>
+
+		<cmdsynopsis>
+			<command>treewatch</command>
+			<group choice='opt'>
+				<arg choice='plain'><option>-a</option></arg>
+				<arg choice='plain'><option>--all-files</option></arg>
+			</group>
+			<group choice='opt'>
+				<arg choice='plain'><option>-c</option></arg>
+				<arg choice='plain'><option>--command</option><replaceable>command</replaceable></arg>
+			</group>
+			<group choice='opt'>
+				<arg choice='plain'><option>-d</option></arg>
+				<arg choice='plain'><option>--directory</option><replaceable>directory</replaceable></arg>
+			</group>
+			<group choice='opt'>
+				<arg choice='plain'><option>-f</option></arg>
+				<arg choice='plain'><option>--file-ending</option><replaceable>ending</replaceable></arg>
+			</group>
+			<group choice='opt'>
+				<arg choice='plain'><option>-o</option></arg>
+				<arg choice='plain'><option>--command-options</option><replaceable>some options</replaceable></arg>
+			</group>
+			<group choice='opt'>
+				<arg><option>-v</option></arg>
+				<arg><option>--verbose</option></arg>
+			</group>
+			<group choice='opt'>
+				<arg><option>-w</option></arg>
+				<arg><option>--no-wait</option></arg>
+			</group>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>treewatch</command> is a program to watch a set of
+		directories and execute a program when there is a change in the files
+		within the directories. It was originally conceived as a way of
+		watching directories of source code (.c, .cpp and .h files) and
+		executing make when the files changed and this is reflected in its
+		default mode of operation which is to watch the current directory for
+		changes in <filename class="extension">.c</filename>, <filename
+		class="extension">.cpp</filename> and <filename
+		class="extension">.h</filename> files and execute
+		<command>/usr/bin/make</command> on changes.</para>
+
+		<para>Any number of directories can be watched, as well as any number
+		of different file endings. It is also possible to watch for changes on
+		all files within a directory.</para>
+
+		<para><command>treewatch</command> will only terminate if it is unable
+		to execute the child command for any reason.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Options</title>
+		<variablelist>
+			<varlistentry>
+				<term><option>-a</option></term>
+				<term><option>--all-files</option></term>
+				<listitem>
+					<para>Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of <option>--file-ending</option> redundant.</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-c</option></term>
+				<term><option>--command</option> <replaceable>command</replaceable></term>
+				<listitem>
+					<para>Specify the child command to run on file changes. The default action is to run <command>/usr/bin/make</command>.</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-d</option></term>
+				<term><option>--directory</option> <replaceable>directory</replaceable></term>
+				<listitem>
+					<para>Specify a directory to watch. This only watches the specific directory given, not any children. Any number of directories can be watched at once. If this option is not used, the default action is to watch the current directory.</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-f</option></term>
+				<term><option>--file-ending</option> <replaceable>ending</replaceable></term>
+				<listitem>
+					<para>Specify file endings to watch for changes. Any number of file endings can be watched at once. Although strictly speaking this option only works on file endings, specifying complete file names works as well. If not given, <command>treewatch</command> watches .c, .cpp and .h files for changes.</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-h</option></term>
+				<term><option>--help</option></term>
+				<listitem>
+					<para>Show <command>treewatch</command> usage.</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-o</option></term>
+				<term><option>--options</option> <replaceable>some options</replaceable></term>
+				<listitem>
+					<para>Give a list of options to pass to the child command. Enclose multiple options with quotes. The string "%f" can be used to obtain the name of the file that changed.</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-v</option></term>
+				<term><option>--verbose</option></term>
+				<listitem>
+					<para>Be more verbose. This is currently limited to printing the return status of the child command (assuming that <option>--no-wait</option> is not given).</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term><option>-w</option></term>
+				<term><option>--no-wait</option></term>
+				<listitem>
+					<para>Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Signals</title>
+		<para><command>treewatch</command> will execute the specified command upon receiving <systemitem class="event">SIGUSR1</systemitem> regardless of whether any files have changed.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Examples</title>
+		<para>Running <command>treewatch</command> without any options is equivalent to running:
+			<screen>
+	<userinput>treewatch -c /usr/bin/make -d . -f .c -f .cpp -f .h</userinput></screen>
+		</para>
+		<para>Watch <filename class="directory">/tmp</filename> for any file changes and echo a message about which file changed:
+			<screen>
+	<userinput>treewatch -a -c /bin/echo -o "tmp file changed: %f" -d /tmp</userinput></screen>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+		<para>Only the first "%f" string is replaced in the options argument.</para>
+		<para>If you find a bug, please submit a report at <uri type="webpage">http://bugs.launchpad.net/treewatch</uri></para>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

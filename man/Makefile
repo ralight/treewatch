@@ -1,8 +1,10 @@
 include ../config.mk
 
-.PHONY : all clean install uninstall
+.PHONY : all clean install uninstall dist dist-clean
 
 all : 
+
+treewatch.1 : dist
 
 clean :
 
@@ -12,3 +14,9 @@ install :
 
 uninstall :
 	-rm -f ${DESTDIR}${mandir}/man1/treewatch.1
+
+dist :
+	$(DOCBOOK2MAN) treewatch.1.xml
+
+dist-clean :
+	-rm -f treewatch.1

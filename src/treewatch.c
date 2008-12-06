@@ -47,7 +47,7 @@ static struct option options[] = {
 	{"all-files", no_argument, 0, 'a'},
 	{"command", required_argument, 0, 'c'},
 	{"directory", required_argument, 0, 'd'},
-	{"file-endings", required_argument, 0, 'f'},
+	{"file-ending", required_argument, 0, 'f'},
 	{"command-options", required_argument, 0, 'o'},
 	{"help", no_argument, 0, 'h'},
 	{"verbose", no_argument, 0, 'v'},
