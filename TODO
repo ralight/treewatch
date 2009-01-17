@@ -1,1 +1,3 @@
 * Watch a whole directory tree for changes?
+  - Handle symlinks (optionally)
+* .treewatch_config for default file endings/options.
