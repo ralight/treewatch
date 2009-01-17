@@ -43,7 +43,7 @@
 
 #define _(String) gettext(String)
 
-static struct option options[] = {
+static struct option program_options[] = {
 	{"all-files", no_argument, 0, 'a'},
 	{"command", required_argument, 0, 'c'},
 	{"directory", required_argument, 0, 'd'},
@@ -54,6 +54,10 @@ static struct option options[] = {
 	{"wait", no_argument, 0, 'w'},
 	{0, 0, 0, 0}
 };
+
+void execute_command(const char *filename);
+void sigusr_handle(int signum);
+
 
 /* The inotify file descriptor. */
 int reconfigure_fd;
@@ -267,7 +271,7 @@ int main(int argc, char *argv[])
 
 	/* Parse arguments */
 	while(1) {
-		sopt = getopt_long(argc, argv, "ac:d:f:ho:vw", options, &optindex);
+		sopt = getopt_long(argc, argv, "ac:d:f:ho:vw", program_options, &optindex);
 		if(sopt == -1) break;
 		switch(sopt) {
 			case 'a':
