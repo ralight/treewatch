@@ -3,7 +3,7 @@ include config.mk
 DIRS=man po src
 DISTDIRS=man
 
-.PHONY : all treewatch clean install uninstall dist dist-clean sign copy
+.PHONY : all treewatch clean install uninstall dist dist-clean sign copy pottar
 
 all : treewatch
 
@@ -34,3 +34,10 @@ sign : dist
 
 copy : sign
 	scp treewatch-${VERSION}.tar.bz2 treewatch-${VERSION}.tar.bz2.asc atchoo:atchoo.org/tools/treewatch/files/
+
+pottar : dist-clean
+	mkdir -p treewatch-pot/po treewatch-pot/man
+	#cp po/*.po treewatch-pot/po/
+	cp po/treewatch.pot treewatch-pot/po/
+	/usr/bin/xml2po -o treewatch-pot/man/treewatch-man-1.pot man/treewatch.1.xml
+	tar -zcf treewatch-pot.tar.gz treewatch-pot
