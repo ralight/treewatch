@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
 				break;
 			case 'h':
 	 			printf(_("treewatch version %s (build date: %s)\n\n"), VERSION, BUILDDATE),
-				printf(_("Copyright (C) 2008 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n"));
+				printf(_("Copyright (C) 2008,2009 Roger Light\nhttp://atchoo.org/tools/treewatch/\n\n"));
 				printf(_("treewatch comes with ABSOLUTELY NO WARRANTY.  You may distribute treewatch freely\nas described in the COPYING file distributed with this file.\n\n"));
 				printf(_("treewatch is a program to watch a directory and execute a program on file changes.\n\n"));
 				printf(_("Usage: treewatch -h\n"));
