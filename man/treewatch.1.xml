@@ -1,12 +1,13 @@
-<?xml version='1.0' encoding='ISO-8859-1'?>
-<?xml-stylesheet type="text/xsl" href="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"?>
-<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd">
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
 
 
-<refentry xml:id="treewatch">
+<refentry xml:id="treewatch" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<refmeta>
 		<refentrytitle>treewatch</refentrytitle>
 		<manvolnum>1</manvolnum>
+		<refmiscinfo class="source"> </refmiscinfo>
+		<refmiscinfo class="manual">General Commands Manual</refmiscinfo>
 	</refmeta>
 
 	<refnamediv>
@@ -33,27 +34,27 @@
 			</group>
 			<group choice='opt'>
 				<arg choice='plain'><option>-c</option></arg>
-				<arg choice='plain'><option>--command</option><replaceable>command</replaceable></arg>
+				<arg choice='plain'><option>--command</option> <replaceable>command</replaceable></arg>
 			</group>
 			<group choice='opt'>
 				<arg choice='plain'><option>-d</option></arg>
-				<arg choice='plain'><option>--directory</option><replaceable>directory</replaceable></arg>
+				<arg choice='plain'><option>--directory</option> <replaceable>directory</replaceable></arg>
 			</group>
 			<group choice='opt'>
 				<arg choice='plain'><option>-f</option></arg>
-				<arg choice='plain'><option>--file-ending</option><replaceable>ending</replaceable></arg>
+				<arg choice='plain'><option>--file-ending</option> <replaceable>ending</replaceable></arg>
 			</group>
 			<group choice='opt'>
 				<arg choice='plain'><option>-o</option></arg>
-				<arg choice='plain'><option>--command-options</option><replaceable>some options</replaceable></arg>
+				<arg choice='plain'><option>--command-options</option> <replaceable>some options</replaceable></arg>
 			</group>
 			<group choice='opt'>
-				<arg><option>-v</option></arg>
-				<arg><option>--verbose</option></arg>
+				<arg choice='plain'><option>-v</option></arg>
+				<arg choice='plain'><option>--verbose</option></arg>
 			</group>
 			<group choice='opt'>
-				<arg><option>-w</option></arg>
-				<arg><option>--no-wait</option></arg>
+				<arg choice='plain'><option>-w</option></arg>
+				<arg choice='plain'><option>--no-wait</option></arg>
 			</group>
 		</cmdsynopsis>
 	</refsynopsisdiv>
@@ -86,7 +87,10 @@
 				<term><option>-a</option></term>
 				<term><option>--all-files</option></term>
 				<listitem>
-					<para>Watch all files for changes in the directories being watched for rather than just the ones with specified file endings. This option makes any use of <option>--file-ending</option> redundant.</para>
+					<para>Watch all files for changes in the directories
+						being watched for rather than just the ones with
+						specified file endings. This option makes any use of
+						<option>--file-ending</option> redundant.</para>
 				</listitem>
 			</varlistentry>
 
@@ -94,7 +98,9 @@
 				<term><option>-c</option></term>
 				<term><option>--command</option> <replaceable>command</replaceable></term>
 				<listitem>
-					<para>Specify the child command to run on file changes. The default action is to run <command>/usr/bin/make</command>.</para>
+					<para>Specify the child command to run on file changes.
+						The default action is to run
+						<command>/usr/bin/make</command>.</para>
 				</listitem>
 			</varlistentry>
 
@@ -102,7 +108,11 @@
 				<term><option>-d</option></term>
 				<term><option>--directory</option> <replaceable>directory</replaceable></term>
 				<listitem>
-					<para>Specify a directory to watch. This only watches the specific directory given, not any children. Any number of directories can be watched at once. If this option is not used, the default action is to watch the current directory.</para>
+					<para>Specify a directory to watch. This only watches the
+						specific directory given, not any children. Any
+						number of directories can be watched at once. If this
+						option is not used, the default action is to watch
+						the current directory.</para>
 				</listitem>
 			</varlistentry>
 
@@ -110,7 +120,12 @@
 				<term><option>-f</option></term>
 				<term><option>--file-ending</option> <replaceable>ending</replaceable></term>
 				<listitem>
-					<para>Specify file endings to watch for changes. Any number of file endings can be watched at once. Although strictly speaking this option only works on file endings, specifying complete file names works as well. If not given, <command>treewatch</command> watches .c, .cpp and .h files for changes.</para>
+					<para>Specify file endings to watch for changes. Any
+						number of file endings can be watched at once.
+						Although strictly speaking this option only works on
+						file endings, specifying complete file names works as
+						well. If not given, <command>treewatch</command>
+						watches .c, .cpp and .h files for changes.</para>
 				</listitem>
 			</varlistentry>
 
@@ -126,7 +141,10 @@
 				<term><option>-o</option></term>
 				<term><option>--options</option> <replaceable>some options</replaceable></term>
 				<listitem>
-					<para>Give a list of options to pass to the child command. Enclose multiple options with quotes. The string "%f" can be used to obtain the name of the file that changed.</para>
+					<para>Give a list of options to pass to the child
+						command. Enclose multiple options with quotes. The
+						string "%f" can be used to obtain the name of the
+						file that changed.</para>
 				</listitem>
 			</varlistentry>
 
@@ -134,7 +152,10 @@
 				<term><option>-v</option></term>
 				<term><option>--verbose</option></term>
 				<listitem>
-					<para>Be more verbose. This is currently limited to printing the return status of the child command (assuming that <option>--no-wait</option> is not given).</para>
+					<para>Be more verbose. This is currently limited to
+						printing the return status of the child command
+						(assuming that <option>--no-wait</option> is not
+						given).</para>
 				</listitem>
 			</varlistentry>
 
@@ -142,7 +163,10 @@
 				<term><option>-w</option></term>
 				<term><option>--no-wait</option></term>
 				<listitem>
-					<para>Don't wait for the child command to finish before continuing. The default setting is to wait so that a marker can be printed after the child has exited.</para>
+					<para>Don't wait for the child command to finish before
+						continuing. The default setting is to wait so that a
+						marker can be printed after the child has
+						exited.</para>
 				</listitem>
 			</varlistentry>
 		</variablelist>
@@ -150,7 +174,9 @@
 
 	<refsect1>
 		<title>Signals</title>
-		<para><command>treewatch</command> will execute the specified command upon receiving <systemitem class="event">SIGUSR1</systemitem> regardless of whether any files have changed.</para>
+		<para><command>treewatch</command> will execute the specified command
+			upon receiving <systemitem class="event">SIGUSR1</systemitem>
+			regardless of whether any files have changed.</para>
 	</refsect1>
 
 	<refsect1>
@@ -167,7 +193,8 @@
 
 	<refsect1>
 		<title>Bugs</title>
-		<para>Only the first "%f" string is replaced in the options argument.</para>
+		<para>Only the first "%f" string is replaced in the options
+			argument.</para>
 		<para>If you find a bug, please submit a report at <uri type="webpage">http://bugs.launchpad.net/treewatch</uri></para>
 	</refsect1>
 

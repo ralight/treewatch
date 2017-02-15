@@ -2,9 +2,10 @@ include ../config.mk
 
 .PHONY : all clean install uninstall dist dist-clean
 
-all : 
+all : treewatch.1
 
-treewatch.1 : dist
+treewatch.1 : treewatch.1.xml
+	$(XSLTPROC) $^
 
 clean :
 
@@ -15,8 +16,13 @@ install :
 uninstall :
 	-rm -f ${DESTDIR}${mandir}/man1/treewatch.1
 
-dist :
-	$(DOCBOOK2MAN) treewatch.1.xml
-
 dist-clean :
 	-rm -f treewatch.1
+
+html : *.xml
+	set -e; for m in *.xml; \
+		do \
+		hfile=$$(echo $${m} | sed -e 's#\(.*\)\.xml#\1#' | sed -e 's/\./-/g'); \
+		$(XSLTPROC) html.xsl $${m} > $${hfile}.html; \
+	done
+

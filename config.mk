@@ -13,3 +13,5 @@ MSGFMT=msgfmt
 prefix=/usr/local
 mandir=${prefix}/man
 
+XSLTPROC=xsltproc
+
